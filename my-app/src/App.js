@@ -4,6 +4,10 @@ import {useState} from 'react'
 function App() {
   const [toDos,setToDos]=useState([])
   const [toDo,setToDo]=useState('')
+  function remove(id){
+    const newtoDo=toDos.filter((e)=>e.id!==id)
+    setToDos(newtoDo)
+  }
   return (
     <div className="app">
       <div className="mainHeading">
@@ -19,20 +23,36 @@ function App() {
       </div>
       <div className="todos">
 
-       { toDos.map((value)=>{
+       { toDos.map((obj)=>{
        
       return( <div className="todo">
           <div className="left">
-            <input  value={value.status} type="checkbox" name="" id="" />
-            <p>{value.text}</p>
+            <input onChange={(e)=>{
+              console.log(e.target.checked)
+              console.log(obj);
+              setToDos(toDos.filter(obj2=>{
+                if(obj2.id===obj.id){
+                  obj2.status=e.target.checked
+                }
+                return obj2
+              }))
+            }} value={obj.status} type="checkbox" name="" id="" />
+            <p>{obj.text}</p>
+            
           </div>
           <div className="right">
-            <i className="fas fa-times"></i>
+            <i onClick={()=>remove(obj.id)} className="fas fa-times"></i>
           </div>
         </div>
             )
           } 
          ) }
+         {toDos.map((obj)=>{
+          if(obj.status){
+            return (<h1>{obj.text}</h1>)
+          }
+          return null
+         })}
       </div>
     </div>
   );
